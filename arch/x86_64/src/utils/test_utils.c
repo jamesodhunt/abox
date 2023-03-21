@@ -38,42 +38,42 @@
 
 #define check_test_func(t) \
 { \
-	assert((t)->name); \
-	assert((t)->fp); \
+    assert((t)->name); \
+    assert((t)->fp); \
 }
 
 #define mk_test_func_entry(test_func, test_type) \
-	{ #test_func, test_type, test_func }
+{ #test_func, test_type, test_func }
 
 #define run_test_funcs(test_array, test_type, test_handler) \
 { \
-	size_t count = sizeof((test_array)) / sizeof((test_array)[0]); \
- \
-	for (size_t i = 0; i < count; i++) { \
-		 test_type *t = &(test_array)[i]; \
- \
-		 if (show_debug()) { \
-			 fprintf(stderr, \
-					 "DEBUG: %s:%d testing function '%s' " \
-					 "(type '%s', fp %p)\n", \
-					 __func__, __LINE__, \
-					 t->name, \
-					 func_type_to_str(t->func_type), \
-					 t->fp); \
-		 } \
- \
-		 (test_handler)(t); \
- \
-		 if (show_debug()) { \
-			 fprintf(stderr, \
-					 "DEBUG: %s:%d tested function '%s' " \
-					 "(type '%s', fp %p)\n", \
-					 __func__, __LINE__, \
-					 t->name, \
-					 func_type_to_str(t->func_type), \
-					 t->fp); \
-		 } \
-	} \
+    size_t count = sizeof((test_array)) / sizeof((test_array)[0]); \
+    \
+    for (size_t i = 0; i < count; i++) { \
+        test_type *t = &(test_array)[i]; \
+        \
+        if (show_debug()) { \
+            fprintf(stderr, \
+                    "DEBUG: %s:%d testing function '%s' " \
+                    "(type '%s', fp %p)\n", \
+                    __func__, __LINE__, \
+                    t->name, \
+                    func_type_to_str(t->func_type), \
+                    t->fp); \
+        } \
+        \
+        (test_handler)(t); \
+        \
+        if (show_debug()) { \
+            fprintf(stderr, \
+                    "DEBUG: %s:%d tested function '%s' " \
+                    "(type '%s', fp %p)\n", \
+                    __func__, __LINE__, \
+                    t->name, \
+                    func_type_to_str(t->func_type), \
+                    t->fp); \
+        } \
+    } \
 }
 
 /*------------------------------------------------------------------*/
@@ -115,45 +115,45 @@ void test_read_and_write(const char *description, Reader *reader, Writer *writer
  * This enum allows us to discrimine between the function types.
  */
 enum FuncType {
-	SYSTEM_FUNC,
-	ASM_FUNC,
+    SYSTEM_FUNC,
+    ASM_FUNC,
 };
 
 const char *
 func_type_to_str(enum FuncType ft)
 {
-	switch (ft)
-	{
-		case SYSTEM_FUNC: return "system";
-		case ASM_FUNC: return "ASM";
-		default: return "unknown";
-	}
+    switch (ft)
+    {
+        case SYSTEM_FUNC: return "system";
+        case ASM_FUNC: return "ASM";
+        default: return "unknown";
+    }
 }
 
 /*------------------------------------------------------------------*/
 
 typedef struct basename_test_func {
-	const char *name;
-	enum FuncType func_type;
-	char *(*fp)(char *path);
+    const char *name;
+    enum FuncType func_type;
+    char *(*fp)(char *path);
 } BasenameTestFunc;
 
 typedef struct getopt_test_func {
-	const char *name;
-	enum FuncType func_type;
-	int (*fp)(int argc, char *const argv[], const char *optstring);
+    const char *name;
+    enum FuncType func_type;
+    int (*fp)(int argc, char *const argv[], const char *optstring);
 } GetoptTestFunc;
 
 typedef struct strlen_test_func {
-	const char *name;
-	enum FuncType func_type;
-	size_t (*fp)(const char *s);
+    const char *name;
+    enum FuncType func_type;
+    size_t (*fp)(const char *s);
 } StrlenTestFunc;
 
 typedef struct strchr_test_func {
-	const char *name;
-	enum FuncType func_type;
-	char *(*fp)(const char *s, int c);
+    const char *name;
+    enum FuncType func_type;
+    char *(*fp)(const char *s, int c);
 } StrchrTestFunc;
 
 /*------------------------------------------------------------------*/
@@ -182,7 +182,7 @@ END_TEST
 void
 handle_test_strlen(StrlenTestFunc *tf)
 {
-	check_test_func(tf);
+    check_test_func(tf);
 
     typedef struct test_data {
         const char *str;
@@ -190,7 +190,7 @@ handle_test_strlen(StrlenTestFunc *tf)
     } TestData;
 
     TestData tests[] = {
-		{ NULL, 0},
+        { NULL, 0},
         { "", 0 },
         { "\0", 0 },
 
@@ -217,14 +217,14 @@ handle_test_strlen(StrlenTestFunc *tf)
     for (int i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
         const TestData *t = &tests[i];
 
-		if (!t->str && tf->func_type == SYSTEM_FUNC) {
-			fprintf(stderr,
-					"WARNING: skipping '%s(NULL)' test for %s "
-					"implementation (not tolerated)\n",
-					tf->name,
-					func_type_to_str(tf->func_type));
-			continue;
-		}
+        if (!t->str && tf->func_type == SYSTEM_FUNC) {
+            fprintf(stderr,
+                    "WARNING: skipping '%s(NULL)' test for %s "
+                    "implementation (not tolerated)\n",
+                    tf->name,
+                    func_type_to_str(tf->func_type));
+            continue;
+        }
 
         size_t len = tf->fp(t->str);
 
@@ -234,12 +234,12 @@ handle_test_strlen(StrlenTestFunc *tf)
 
 START_TEST(test_asm_utils_asm_strlen)
 {
-	StrlenTestFunc test_funcs[] = {
-		mk_test_func_entry(strlen, SYSTEM_FUNC),
-		mk_test_func_entry(asm_strlen, ASM_FUNC),
-	};
+    StrlenTestFunc test_funcs[] = {
+        mk_test_func_entry(strlen, SYSTEM_FUNC),
+        mk_test_func_entry(asm_strlen, ASM_FUNC),
+    };
 
-	run_test_funcs(test_funcs, StrlenTestFunc, handle_test_strlen);
+    run_test_funcs(test_funcs, StrlenTestFunc, handle_test_strlen);
 }
 END_TEST
 
@@ -250,7 +250,7 @@ END_TEST
 void
 handle_test_getopt(GetoptTestFunc *tf)
 {
-	check_test_func(tf);
+    check_test_func(tf);
 
     /* The set of variables that we need to check after a call.
      *
@@ -278,106 +278,106 @@ handle_test_getopt(GetoptTestFunc *tf)
         ArgResult *results[TEST_GETOPT_ARGV_ELEMS];
     } TestData;
 
-	/* Note that we force POSIXLY_CORRECT mode by prefixing optstring
-	 * with "+" in some of the tests below, as documented in getopt(3).
-	 *
-	 * The ASM implementation doesn't recognise "+" but since it only
-	 * handles POSIX behaviour anyway, it's benign.
-	 */
+    /* Note that we force POSIXLY_CORRECT mode by prefixing optstring
+     * with "+" in some of the tests below, as documented in getopt(3).
+     *
+     * The ASM implementation doesn't recognise "+" but since it only
+     * handles POSIX behaviour anyway, it's benign.
+     */
     TestData tests[] = {
         {  .name = "boolean option",
-           .argc = 2,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-a", NULL, NULL, NULL},
-           .optstring = "a",
-           .results = { &(ArgResult){'a', NULL, 2, 0}, NULL, NULL, NULL, NULL },
+            .argc = 2,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-a", NULL, NULL, NULL},
+            .optstring = "a",
+            .results = { &(ArgResult){'a', NULL, 2, 0}, NULL, NULL, NULL, NULL },
         },
 
         {  .name = "non-bundled option",
-           .argc = 3,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-c", "command", NULL, NULL},
-           .optstring = "c:",
-           .results = { &(ArgResult){'c', "command", 3, 0}, NULL, NULL, NULL, NULL },
+            .argc = 3,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-c", "command", NULL, NULL},
+            .optstring = "c:",
+            .results = { &(ArgResult){'c', "command", 3, 0}, NULL, NULL, NULL, NULL },
         },
 
         {  .name = "bundled option",
-           .argc = 2,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-bbundled", NULL, NULL, NULL},
-           .optstring = "ab:z",
-           .results = { &(ArgResult){'b', "bundled", 2, 0}, NULL, NULL, NULL, NULL },
+            .argc = 2,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-bbundled", NULL, NULL, NULL},
+            .optstring = "ab:z",
+            .results = { &(ArgResult){'b', "bundled", 2, 0}, NULL, NULL, NULL, NULL },
         },
 
         {  .name = "return on 1st non option (POSIX)",
-           .argc = 2,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "ignored", NULL, NULL, NULL},
-           .optstring = "+a",
-           .results = { &(ArgResult){-1, NULL, 1, 0}, NULL, NULL, NULL, NULL },
+            .argc = 2,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "ignored", NULL, NULL, NULL},
+            .optstring = "+a",
+            .results = { &(ArgResult){-1, NULL, 1, 0}, NULL, NULL, NULL, NULL },
         },
 
         {  .name = "two bool options",
-           .argc = 3,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-a", "-b", NULL, NULL},
-           .optstring = "ab",
-           .results = { &(ArgResult){'a', NULL, 2, 0}, &(ArgResult){'b', NULL, 3, 0}, NULL, NULL, NULL },
+            .argc = 3,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-a", "-b", NULL, NULL},
+            .optstring = "ab",
+            .results = { &(ArgResult){'a', NULL, 2, 0}, &(ArgResult){'b', NULL, 3, 0}, NULL, NULL, NULL },
         },
 
         {  .name = "two options needing args",
-           .argc = 5,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-c", "command", "-d", "foo", NULL},
-           .optstring = "c:d:",
-           .results = { &(ArgResult){'c', "command", 3, 0}, &(ArgResult){'d', "foo", 5, 0}, NULL, NULL, NULL },
+            .argc = 5,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-c", "command", "-d", "foo", NULL},
+            .optstring = "c:d:",
+            .results = { &(ArgResult){'c', "command", 3, 0}, &(ArgResult){'d', "foo", 5, 0}, NULL, NULL, NULL },
         },
 
         {  .name = "two bundled options",
-           .argc = 5,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-ccommand", "-dfoo", NULL},
-           .optstring = "c:d:",
-           .results = { &(ArgResult){'c', "command", 2, 0}, &(ArgResult){'d', "foo", 3, 0}, NULL, NULL, NULL },
+            .argc = 5,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-ccommand", "-dfoo", NULL},
+            .optstring = "c:d:",
+            .results = { &(ArgResult){'c', "command", 2, 0}, &(ArgResult){'d', "foo", 3, 0}, NULL, NULL, NULL },
         },
 
         {  .name = "bool option before option needing arg",
-           .argc = 4,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-a", "-c", "command", NULL},
-           .optstring = "ac:",
-           .results = { &(ArgResult){'a', NULL, 2, 0}, &(ArgResult){'c', "command", 4, 0}, NULL, NULL, NULL },
+            .argc = 4,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-a", "-c", "command", NULL},
+            .optstring = "ac:",
+            .results = { &(ArgResult){'a', NULL, 2, 0}, &(ArgResult){'c', "command", 4, 0}, NULL, NULL, NULL },
         },
 
         {  .name = "option needing arg before bool option",
-           .argc = 4,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-c", "command", "-a", NULL},
-           .optstring = "ac:",
-           .results = { &(ArgResult){'c', "command", 3, 0}, &(ArgResult){'a', NULL, 4, 0}, NULL, NULL, NULL },
+            .argc = 4,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-c", "command", "-a", NULL},
+            .optstring = "ac:",
+            .results = { &(ArgResult){'c', "command", 3, 0}, &(ArgResult){'a', NULL, 4, 0}, NULL, NULL, NULL },
         },
 
         /* FIXME: can't handle this yet. */
 #if 0
         {  .name = "boolean option with unexpected bundled value",
-           .argc = 2,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-datoz", NULL, NULL, NULL},
-           .optstring = "c:d",
+            .argc = 2,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-datoz", NULL, NULL, NULL},
+            .optstring = "c:d",
 
-           .results = { &(ArgResult){'d', NULL, 1, 0}, NULL, NULL, NULL, NULL },
+            .results = { &(ArgResult){'d', NULL, 1, 0}, NULL, NULL, NULL, NULL },
         },
 #endif
         {  .name = "Options ignored after single dash arg",
-           .argc = 2,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-", "-a", NULL, NULL},
-           .optstring = "+a",
-           .results = { &(ArgResult){-1, NULL, 1, 0}, NULL, NULL, NULL, NULL },
+            .argc = 2,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-", "-a", NULL, NULL},
+            .optstring = "+a",
+            .results = { &(ArgResult){-1, NULL, 1, 0}, NULL, NULL, NULL, NULL },
         },
 
         {  .name = "Options ignored after double dash arg",
-           .argc = 2,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "--", "-a", NULL, NULL},
-           .optstring = "+a",
-           .results = { &(ArgResult){-1, NULL, 2, 0}, NULL, NULL, NULL, NULL },
+            .argc = 2,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "--", "-a", NULL, NULL},
+            .optstring = "+a",
+            .results = { &(ArgResult){-1, NULL, 2, 0}, NULL, NULL, NULL, NULL },
         },
 
-		/* Error scenarios */
+        /* Error scenarios */
         {  .name = "non-bundled option with missing arg",
-           .argc = 2,
-           .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-c", NULL, NULL, NULL},
-           .optstring = "c:",
-           .results = { &(ArgResult){'?', NULL, 2, 'c'}, NULL, NULL, NULL, NULL },
+            .argc = 2,
+            .argv = (const char *[TEST_GETOPT_ARGV_ELEMS]){"prog", "-c", NULL, NULL, NULL},
+            .optstring = "c:",
+            .results = { &(ArgResult){'?', NULL, 2, 'c'}, NULL, NULL, NULL, NULL },
         },
 
 
@@ -385,38 +385,38 @@ handle_test_getopt(GetoptTestFunc *tf)
 
     int ret;
 
-	/* The system implementation cannot cope with invalid args */
-	if (tf->func_type != SYSTEM_FUNC) {
-		/* Perform some basic initial tests */
-		ret = tf->fp(0, NULL, "");
-		ck_assert_int_eq(ret, -1);
+    /* The system implementation cannot cope with invalid args */
+    if (tf->func_type != SYSTEM_FUNC) {
+        /* Perform some basic initial tests */
+        ret = tf->fp(0, NULL, "");
+        ck_assert_int_eq(ret, -1);
 
-		ret = tf->fp(1, NULL, "");
-		ck_assert_int_eq(ret, -1);
+        ret = tf->fp(1, NULL, "");
+        ck_assert_int_eq(ret, -1);
 
-		ret = tf->fp(3, NULL, "");
-		ck_assert_int_eq(ret, -1);
+        ret = tf->fp(3, NULL, "");
+        ck_assert_int_eq(ret, -1);
 
-		ret = tf->fp(3, NULL, "abc:");
-		ck_assert_int_eq(ret, -1);
+        ret = tf->fp(3, NULL, "abc:");
+        ck_assert_int_eq(ret, -1);
 
-		ret = tf->fp(0, NULL, "abc:");
-		ck_assert_int_eq(ret, -1);
-	}
+        ret = tf->fp(0, NULL, "abc:");
+        ck_assert_int_eq(ret, -1);
+    }
 
     for (int i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
         const TestData *t = &tests[i];
 
         /* Reset global state to POSIX prescribed values.
-		 *
-		 * Note: We'd like to check these values initially, but we can't
-		 * as GNU getopt (which may have been called previously)
-		 * maintains internal state with no way to reset it correctly.
-		 */
+         *
+         * Note: We'd like to check these values initially, but we can't
+         * as GNU getopt (which may have been called previously)
+         * maintains internal state with no way to reset it correctly.
+         */
         optarg = NULL;
         opterr = 1;
         optopt = '?';
-		optind = 1;
+        optind = 1;
 
         if (show_debug()) {
             fprintf(stderr, "FIXME: "
@@ -492,19 +492,19 @@ handle_test_getopt(GetoptTestFunc *tf)
 
 START_TEST(test_asm_utils_asm_getopt)
 {
-	GetoptTestFunc test_funcs[] = {
-		mk_test_func_entry(getopt, SYSTEM_FUNC),
-		mk_test_func_entry(asm_getopt, ASM_FUNC),
-	};
+    GetoptTestFunc test_funcs[] = {
+        mk_test_func_entry(getopt, SYSTEM_FUNC),
+        mk_test_func_entry(asm_getopt, ASM_FUNC),
+    };
 
-	run_test_funcs(test_funcs, GetoptTestFunc, handle_test_getopt);
+    run_test_funcs(test_funcs, GetoptTestFunc, handle_test_getopt);
 }
 END_TEST
 
 void
 handle_test_basename(BasenameTestFunc *tf)
 {
-	check_test_func(tf);
+    check_test_func(tf);
 
     /* Note that basename(3) doesn't return a meaningful
      * error value to check for.
@@ -586,52 +586,52 @@ handle_test_basename(BasenameTestFunc *tf)
 
 START_TEST(test_asm_utils_asm_basename)
 {
-	BasenameTestFunc test_funcs[] = {
-		mk_test_func_entry(basename, SYSTEM_FUNC),
-		mk_test_func_entry(asm_basename, ASM_FUNC),
-	};
+    BasenameTestFunc test_funcs[] = {
+        mk_test_func_entry(basename, SYSTEM_FUNC),
+        mk_test_func_entry(asm_basename, ASM_FUNC),
+    };
 
-	run_test_funcs(test_funcs, BasenameTestFunc, handle_test_basename);
+    run_test_funcs(test_funcs, BasenameTestFunc, handle_test_basename);
 }
 END_TEST
 
 void
 handle_test_strchr(StrchrTestFunc *tf)
 {
-	check_test_func(tf);
+    check_test_func(tf);
 
     typedef struct test_data {
-		const char *s;
-		int c;
+        const char *s;
+        int c;
         const char *result;
     } TestData;
 
-	const char *b = "b";
-	const char *foo = "foo";
+    const char *b = "b";
+    const char *foo = "foo";
 
     TestData tests[] = {
-		{ NULL, 0, NULL },
-		{ NULL, 'a', NULL },
+        { NULL, 0, NULL },
+        { NULL, 'a', NULL },
 
-		/* Search for trailing '\0' */
-		{ b, 0, b+strlen(b) },
-		{ foo, 0, foo+strlen(foo) },
+        /* Search for trailing '\0' */
+        { b, 0, b+strlen(b) },
+        { foo, 0, foo+strlen(foo) },
 
-		{ "wibble", 'z', NULL },
-		{ "wibble", UCHAR_MAX, NULL },
+        { "wibble", 'z', NULL },
+        { "wibble", UCHAR_MAX, NULL },
     };
 
     for (int i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
         const TestData *t = &tests[i];
 
-		if (!t->s && tf->func_type == SYSTEM_FUNC) {
-			fprintf(stderr,
-					"WARNING: skipping '%s(NULL)' test for %s "
-					"implementation (not tolerated)\n",
-					tf->name,
-					func_type_to_str(tf->func_type));
-			continue;
-		}
+        if (!t->s && tf->func_type == SYSTEM_FUNC) {
+            fprintf(stderr,
+                    "WARNING: skipping '%s(NULL)' test for %s "
+                    "implementation (not tolerated)\n",
+                    tf->name,
+                    func_type_to_str(tf->func_type));
+            continue;
+        }
         char *result = tf->fp(t->s, t->c);
 
         if (show_debug()) {
@@ -642,35 +642,35 @@ handle_test_strchr(StrchrTestFunc *tf)
                     t->s ? t->s : "",
                     t->c,
                     t->result ? t->result: "",
-					t->result,
+                    t->result,
                     result ? result : "",
-					result);
+                    result);
         }
 
-		if (t->result) {
-			ck_assert_ptr_nonnull(result);
+        if (t->result) {
+            ck_assert_ptr_nonnull(result);
 
-			/* Search byte was '\0' */
-			if (!*t->result) {
-				ck_assert(!*result);
-			} else {
-				/* Search byte was not the delimiter */
-				ck_assert_str_eq(result, t->result);
-			}
-		} else {
-			ck_assert_ptr_null(result);
-		}
+            /* Search byte was '\0' */
+            if (!*t->result) {
+                ck_assert(!*result);
+            } else {
+                /* Search byte was not the delimiter */
+                ck_assert_str_eq(result, t->result);
+            }
+        } else {
+            ck_assert_ptr_null(result);
+        }
     }
 }
 
 START_TEST(test_asm_utils_asm_strchr)
 {
-	StrchrTestFunc test_funcs[] = {
-		mk_test_func_entry(strchr, SYSTEM_FUNC),
-		mk_test_func_entry(asm_strchr, ASM_FUNC),
-	};
+    StrchrTestFunc test_funcs[] = {
+        mk_test_func_entry(strchr, SYSTEM_FUNC),
+        mk_test_func_entry(asm_strchr, ASM_FUNC),
+    };
 
-	run_test_funcs(test_funcs, StrchrTestFunc, handle_test_strchr);
+    run_test_funcs(test_funcs, StrchrTestFunc, handle_test_strchr);
 }
 END_TEST
 
@@ -804,12 +804,12 @@ START_TEST(test_asm_utils_alloc_args_buffer)
     typedef struct test_data {
         int argc;
         const char *argv[TEST_ARGV_ELEMS];
-		/* Total length of all bytes in all argv elements */
+        /* Total length of all bytes in all argv elements */
         size_t args_len;
 
-		/* Length of returned string including space separators
-		 * newline and nul terminator.
-		 */
+        /* Length of returned string including space separators
+         * newline and nul terminator.
+         */
         size_t total_len;
     } TestData;
 
@@ -818,9 +818,9 @@ START_TEST(test_asm_utils_alloc_args_buffer)
     const char *foo = "foo";
     const char *hello_world = "hello_world";
 
-	/* These symbolic names are simply used to make the TestData array
-	 * more understandable.
-	 */
+    /* These symbolic names are simply used to make the TestData array
+     * more understandable.
+     */
 #define NL_BYTE 1
 #define SPC_BYTE 1
 
@@ -904,7 +904,7 @@ START_TEST(test_asm_utils_alloc_args_buffer)
 
         ck_assert_int_eq(bytes, t->total_len);
 
-		/* paranoia check */
+        /* paranoia check */
         size_t len = strlen(str);
         ck_assert_int_eq(bytes, len);
 
@@ -1293,12 +1293,6 @@ asm_utils_suite(void)
 
 /*------------------------------------------------------------------*/
 
-void
-atexit_handler(void)
-{
-	fflush(NULL);
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -1308,8 +1302,6 @@ main(int argc, char *argv[])
     Suite *s;
     SRunner *sr;
     int number_failed;
-
-	atexit(atexit_handler);
 
     s = asm_utils_suite();
     sr = srunner_create(s);
