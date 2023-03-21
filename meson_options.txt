@@ -1,0 +1,28 @@
+#---------------------------------------------------------------------
+# vim:set expandtab:
+#---------------------------------------------------------------------
+# Copyright (c) 2023 James O. D. Hunt <jamesodhunt@gmail.com>
+#
+# SPDX-License-Identifier: Apache-2.0
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Meson build options
+#---------------------------------------------------------------------
+
+option('assembler',
+    type: 'combo',
+    choices: ['nasm', 'yasm'],
+    value: 'nasm',
+    description: 'Assembler to use')
+
+option('tests',
+    type: 'boolean',
+    value: true,
+    description: 'Build the tests [default: true]')
+
+option('extra_c_sources',
+    type: 'array',
+    description: 'Optional list of extra C sources to build with')
+
+#---------------------------------------------------------------------
