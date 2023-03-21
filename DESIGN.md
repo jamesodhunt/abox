@@ -53,7 +53,7 @@ architectures.
 - No crazy stack manipulations.
 
   Overuse of `push` and `pop` is just as bad a register shuffling in
-  terms of making the code easy to understand.
+  terms of making the code difficult to understand.
 
   However, a single push and then referencing the value on the stack
   (via a macro / `equ` for clarity) is fine.
