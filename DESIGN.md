@@ -137,14 +137,14 @@ global command_foo
 global command_help_foo
 
 section .rodata
-command_help_foo:		db	"This command creates unicorns, ",10 \
-                        db  "fairies and pixies.",10, \
-                        db  10, \
-						db  "Options:",10, \
-						db  "-a : ...",10, \
-						db  "-b : ...",10, \
-						db  "-z : ...",10, \
-						db  "See echo(1)",0
+command_help_foo:   db  "This command creates unicorns, ",10 \
+                    db  "fairies and pixies.",10, \
+                    db  10, \
+                    db  "Options:",10, \
+                    db  "-a : ...",10, \
+                    db  "-b : ...",10, \
+                    db  "-z : ...",10, \
+                    db  "See echo(1)",0
 
 section .text
 
