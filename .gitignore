@@ -8,4 +8,4 @@
 
 abox
 arch/*/src/generated/
-build/
+builddir/
