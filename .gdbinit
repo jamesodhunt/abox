@@ -7,4 +7,6 @@
 #---------------------------------------------------------------------
 
 b main
+
+# Assumes you've installed https://github.com/cyrus-and/gdb-dashboard
 init-gdb-dashboard
