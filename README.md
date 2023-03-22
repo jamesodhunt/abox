@@ -22,7 +22,7 @@ language.
 | Build system | `meson` and `ninja` | yes | | |
 | Make | GNU Make | no | Simplifies building | |
 | C unit test framework | [`check`](https://github.com/libcheck/check) | no `(*)` | | aka `libcheck` |
-| CLI tests | [BATS](https://github.com/bats-core/bats-core) | no `(*)` | CLI testing | |
+| CLI tests | [BATS](https://github.com/bats-core/bats-core) | no `(*)` | [CLI testing](bats) | |
 | `moreutils` package | `errno` command | yes | Used by [`abox-util.sh`](scripts/abox-util.sh) to generate definitions | |
 
 `(*)` - The defaults assume these tools are present.
