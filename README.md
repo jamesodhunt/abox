@@ -6,7 +6,7 @@ Intel 64-bit assembly language (`x86_64`) for Linux.
 
 > **Note:**
 >
-> There is no shell currently - I'm working on it! ;)
+> There is no shell currently - I'm [working on it!](https://github.com/jamesodhunt/abox/issues/1) ;)
 
 ## Why?
 
