@@ -393,7 +393,7 @@ head:
     ret
 
 .error:
-    mov     qword [rsp+.ret], -1
+    mov     qword [rsp+.ret], CMD_FAILED
     jmp     .out
 
 ;---------------------------------------------------------------------
