@@ -48,9 +48,9 @@ section .text
     ; Params
     .arg_count      equ      0  ; size_t.
 
-    .first_str      equ      8  ; "char *" ssize_t value.
-    .step_str       equ     16  ; "char *" ssize_t value.
-    .last_str       equ     24  ; "char *" ssize_t value.
+    .first_str      equ      8  ; "char *" value.
+    .step_str       equ     16  ; "char *" value.
+    .last_str       equ     24  ; "char *" value.
 
     .first          equ     32  ; ssize_t value.
     .step           equ     40  ; ssize_t value.
@@ -111,7 +111,7 @@ section .text
 .handle_error:
     mov     rdi, STDERR_FD
     dcall   write
-    mov     rax, -1
+    mov     rax, CMD_FAILED
     jmp     .out
 
 ;-----------------------------------
