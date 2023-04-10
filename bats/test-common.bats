@@ -341,3 +341,35 @@ test_cmd_unquoted_args() {
 
 	return 0
 }
+
+test_cmd_via_sym_link_unquoted_args() {
+	local cmd="${1:-}"
+	[ -n "$cmd" ] || die "need command"
+
+	shift
+
+	local args="$@"
+
+	local quote
+	quote='no'
+
+	_test_cmd_via_sym_link "$quote" "$cmd" "$args"
+
+	return 0
+}
+
+test_cmd_via_multi_call_binary_unquoted_args() {
+	local cmd="${1:-}"
+	[ -n "$cmd" ] || die "need command"
+
+	shift
+
+	local args="$@"
+
+	local quote
+	quote='no'
+
+	_test_cmd_via_multi_call_binary "$quote" "$cmd" "$args"
+
+	return 0
+}

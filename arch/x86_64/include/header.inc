@@ -47,8 +47,11 @@ BASE_10			equ		10
 ; Number of bytes in a pointer/size_t.
 PTR_SIZE		equ		 8
 
-; FIXME: should call sysconf(_SC_PAGESIZE).
-PAGE_SIZE       equ     4096
+; FIXME: Should call pathconf(_PC_PATH_MAX).
+PATH_MAX		equ		 4096
+
+; FIXME: Should call sysconf(_SC_PAGESIZE).
+PAGE_SIZE       equ      4096
 
 ; A "reasonable" size for a buffer that will be used to perform I/O.
 IO_READ_BUF_SIZE        equ     (PAGE_SIZE * 16)
