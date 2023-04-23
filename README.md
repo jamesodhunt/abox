@@ -4,14 +4,23 @@ Yet another simple [`busybox`](https://www.busybox.net) /
 [`toybox`](https://landley.net/toybox) clone. This one is written in
 Intel 64-bit assembly language (`x86_64`) for Linux.
 
-> **Note:**
->
-> There is no shell currently - I'm [working on it!](https://github.com/jamesodhunt/abox/issues/1) ;)
-
 ## Why?
 
 Because I wanted an excuse to write some modern 64-bit Intel assembly
 language.
+
+## Commands
+
+Currently, the following commands are implemented in some form:
+
+```bash
+$ abox -l | xargs
+basename cat clear echo env false head ln pwd rm seq sleep sync touch true yes
+```
+
+> **Note:**
+>
+> There is no shell currently - I'm [working on it!](https://github.com/jamesodhunt/abox/issues/1) ;)
 
 ## Dependencies
 
